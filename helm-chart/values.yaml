@@ -1,0 +1,26 @@
+replicaCount: 1
+image:
+  repository: immesys/example-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+shopName: "default-shop"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: "${CERTIFICATE_ARN}"
+    alb.ingress.kubernetes.io/target-type: "ip"
+  hosts:
+    - host: "default-shop.i3.devops.antimatter.io"
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
